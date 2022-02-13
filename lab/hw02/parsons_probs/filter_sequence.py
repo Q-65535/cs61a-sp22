@@ -9,3 +9,9 @@ def filter_sequence(cond, start, stop):
     25
     """
     "*** YOUR CODE HERE ***"
+    sum = 0
+    while start <= stop:
+        if cond(start):
+            sum = sum + start
+        start = start + 1
+    return sum
