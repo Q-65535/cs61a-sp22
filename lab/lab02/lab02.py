@@ -13,8 +13,7 @@ def lambda_curry2(func):
     >>> lambda_curry2(mod)(123)(10)
     3
     """
-    "*** YOUR CODE HERE ***"
-    return ______
+    return lambda a: lambda b: func(a, b)
 
 
 def lambda_curry2_syntax_check():
@@ -55,7 +54,15 @@ def count_cond(condition):
     >>> count_primes(20)   # 2, 3, 5, 7, 11, 13, 17, 19
     8
     """
-    "*** YOUR CODE HERE ***"
+    def f(N):
+        count = 0
+        i = 1
+        while i <= N:
+            if condition(N, i):
+                count = count + 1
+            i = i + 1   
+        return count
+    return f
 
 
 def composer(f, g):
