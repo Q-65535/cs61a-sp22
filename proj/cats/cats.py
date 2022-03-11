@@ -1,7 +1,9 @@
 """Typing test implementation"""
 
 from dataclasses import replace
+from os import curdir
 from pickle import TRUE
+from re import sub
 from readline import write_history_file
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -177,7 +179,17 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    
+    # this is the word with minimum diff
+    word_with_min_diff = min(word_list, key=lambda word: diff_function(typed_word, word, limit))
+    min_diff_value = diff_function(typed_word, word_with_min_diff, limit)
+    # if the lowest diff is greater than limit, return the oiginal
+    if min_diff_value > limit:
+        return typed_word
+    else:
+         return word_with_min_diff
     # END PROBLEM 5
 
 
@@ -204,7 +216,24 @@ def sphinx_swaps(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    len_diff = abs(len(start) - len(goal))
+    min_len = min(len(start), len(goal))
+
+    count = 0
+    def helper(cur_index):
+        nonlocal count
+        if cur_index == -1:
+            return
+        
+        if start[cur_index] != goal[cur_index]:
+            count = count + 1
+            # if the number of changes is greater than limit, stop recursion
+            if count + len_diff > limit:
+                return
+        helper(cur_index - 1)
+
+    helper(min_len - 1)
+    return count + len_diff   
     # END PROBLEM 6
 
 
@@ -225,24 +254,23 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
+    if limit < 0:
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return 0
+        # END
+    elif len(start) ==0 or len(goal) == 0:
+        # BEGIN
+        return len(start) + len(goal)
         # END
 
-    elif ___________:  # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    elif start[0] == goal[0]:
+        return minimum_mewtations(start[1:], goal[1:], limit)
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = minimum_mewtations(start, goal[1:], limit - 1)
+        remove = minimum_mewtations(start[1:], goal, limit - 1)
+        substitute = minimum_mewtations(start[1:], goal[1:], limit - 1)
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return 1 + min(add, remove, substitute)
         # END
 
 
