@@ -312,7 +312,17 @@ def report_progress(sofar, prompt, user_id, upload):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    # count the number of correct word until first incorrect word
+    count = 0
+    for i in range(len(sofar)):
+        if sofar[i] == prompt[i]:
+            count = count + 1
+        else:
+            break
+    progress_ratio = count / len(prompt)
+    dict_info = {'id': user_id, 'progress': progress_ratio}
+    upload(dict_info)
+    return progress_ratio
     # END PROBLEM 8
 
 
@@ -334,7 +344,15 @@ def time_per_word(words, times_per_player):
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    # this function for calculate the how much time each player takes for each word
+    def cal_time_diff(timestamps):
+        ls = []
+        for i in range(1, len(timestamps)):
+            ls.append(timestamps[i] - timestamps[i - 1])
+        return ls
+    
+    times = [cal_time_diff(x) for x in times_per_player]
+    return match(words, times)
     # END PROBLEM 9
 
 
@@ -356,7 +374,24 @@ def fastest_words(match):
     player_indices = range(len(match["times"]))  # contains an *index* for each player
     word_indices = range(len(match["words"]))    # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    
+
+    # this function finds the best player for a word of given index
+    def find_best_player_num_of_aword(word_index, times):
+        best_player_num = 0
+        min_time = times[0][word_index]
+        for i in range(len(times)):
+            if times[i][word_index] < min_time:
+                min_time = times[i][word_index]
+                best_player_num = i
+        return best_player_num
+        
+    ans = [[] for i in player_indices]
+    # this record the best player for each word (the word index corresponds to record index)
+    best_player_of_each_word = [find_best_player_num_of_aword(i, match['times']) for i in word_indices]
+    for word_index in word_indices:
+        ans[best_player_of_each_word[word_index]].append(word_at(match, word_index))
+    return ans
     # END PROBLEM 10
 
 
