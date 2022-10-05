@@ -34,7 +34,10 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
         return scheme_forms.SPECIAL_FORMS[first](rest, env)
     else:
         # BEGIN PROBLEM 3
-        "*** YOUR CODE HERE ***"
+        procedure = scheme_eval(first, env)
+        # print(procedure)
+        args = rest.map(lambda x: scheme_eval(x, env))
+        return scheme_apply(procedure, args, env)
         # END PROBLEM 3
 
 
@@ -44,7 +47,46 @@ def scheme_apply(procedure, args, env):
     validate_procedure(procedure)
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
-        "*** YOUR CODE HERE ***"
+
+        ############################################################
+        # WARNING: this method can pass problem 2 test, but can't past problem 3 test, weird!
+        ############################################################
+        # args_arr = []
+        # def process(temp_args):
+        #     # If current argument is nil, do nothing
+        #     if temp_args == nil:
+        #         return
+        #     # If current argument is not nil and not a pair, it is a number
+        #     if not isinstance(temp_args, Pair):
+        #         args_arr.append(temp_args)
+        #     # Otherwise, it is a pair, we recursively process the pair
+        #     else:
+        #         process(temp_args.first)
+        #         process(temp_args.rest)
+        # process(args)
+        # print('args: ', args)
+        # print('procedure: ', procedure)
+        # print('args_arr: ', args_arr)
+        # if procedure.expect_env is True:
+        #     args_arr.append(env)
+        # try:
+        #     return procedure.py_func(*args_arr)
+        # except TypeError:
+        #     raise SchemeError('incorrect number of arguments')
+
+        # another solution from Github: treat the args as a linked list
+        lst = []
+        while args != nil:
+            lst.append(args.first)
+            args = args.rest
+        if procedure.expect_env is True:
+            lst.append(env)
+        # print(lst)
+        try:
+            return procedure.py_func(*lst)
+        except TypeError:
+            raise SchemeError('incorrect number of arguments')
+
         # END PROBLEM 2
     elif isinstance(procedure, LambdaProcedure):
         # BEGIN PROBLEM 9

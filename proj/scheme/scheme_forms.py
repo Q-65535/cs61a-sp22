@@ -37,7 +37,10 @@ def do_define_form(expressions, env):
         # assigning a name to a value e.g. (define x (+ 1 2))
         validate_form(expressions, 2, 2)  # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 4
-        "*** YOUR CODE HERE ***"
+        val_exp = expressions.rest.first
+        val = scheme_eval(val_exp, env)
+        env.define(signature, val)
+        return signature
         # END PROBLEM 4
     elif isinstance(signature, Pair) and scheme_symbolp(signature.first):
         # defining a named procedure e.g. (define (f x y) (+ x y))
@@ -58,7 +61,9 @@ def do_quote_form(expressions, env):
     """
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    # Always remember that an expression is a Pair!!!!!!!!!
+    target_exp = expressions.first
+    return target_exp
     # END PROBLEM 5
 
 
