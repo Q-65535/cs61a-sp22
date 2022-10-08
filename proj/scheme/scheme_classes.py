@@ -55,7 +55,15 @@ class Frame:
         if len(formals) != len(vals):
             raise SchemeError('Incorrect number of arguments to function call')
         # BEGIN PROBLEM 8
-        "*** YOUR CODE HERE ***"
+        frame = Frame(self)
+        cur_symbol_pair = formals
+        cur_val_pair = vals
+        while cur_symbol_pair != nil:
+            # cur_symbol_pair.first is the current symbol
+            frame.define(cur_symbol_pair.first, cur_val_pair.first)
+            cur_symbol_pair = cur_symbol_pair.rest
+            cur_val_pair = cur_val_pair.rest
+        return frame
         # END PROBLEM 8
 
 ##############
