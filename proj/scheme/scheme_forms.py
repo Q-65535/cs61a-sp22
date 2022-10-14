@@ -133,7 +133,15 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    if len(expressions) == 0:
+        return True
+    cur_expr = expressions
+    while cur_expr.rest != nil:
+        cur_val = scheme_eval(cur_expr.first, env)
+        if cur_val is False:
+            return False
+        cur_expr = cur_expr.rest
+    return scheme_eval(cur_expr.first, env)
     # END PROBLEM 12
 
 
@@ -152,7 +160,15 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    if len(expressions) == 0:
+        return False
+    cur_expr = expressions
+    while cur_expr.rest != nil:
+        cur_val = scheme_eval(cur_expr.first, env)
+        if cur_val is not False:
+            return cur_val
+        cur_expr = cur_expr.rest
+    return scheme_eval(cur_expr.first, env)
     # END PROBLEM 12
 
 
@@ -173,7 +189,9 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if is_scheme_true(test):
             # BEGIN PROBLEM 13
-            "*** YOUR CODE HERE ***"
+            if clause.rest == nil:
+                return test
+            return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
@@ -199,7 +217,19 @@ def make_let_frame(bindings, env):
         raise SchemeError('bad bindings list in let form')
     names = vals = nil
     # BEGIN PROBLEM 14
-    "*** YOUR CODE HERE ***"
+    frame = env.make_child_frame(nil, nil)
+    cur_bindings_ref = bindings
+    while cur_bindings_ref != nil:
+        cur_binding = cur_bindings_ref.first
+        symbol = cur_binding.first
+        validate_formals(Pair(symbol, nil))
+        validate_form(cur_binding.rest, 1, 1)
+        val = scheme_eval(cur_binding.rest.first, env)
+        if symbol in frame.bindings:
+            raise SchemeError('bad bindings list in let form')
+        frame.define(symbol, val)
+        cur_bindings_ref = cur_bindings_ref.rest
+    return frame
     # END PROBLEM 14
     return env.make_child_frame(names, vals)
 
